@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sohaib's - Advanced Image Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="app-title">
+            <i class="fas fa-pencil-alt"></i>
+            <span>sohaib's Editor </span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <div class="upload-btn-wrapper">
+                <button class="upload-btn">
+                    <i class="fas fa-upload"></i> Upload Image
+                </button>
+                <input type="file" id="imageUpload" accept="image/*">
+            </div>
+            <button id="captureBtn" class="capture-btn">
+                <i class="fas fa-camera"></i> Capture Photo
+            </button>
+        </section>
+
+        <!-- Video Container -->
+        <div id="videoContainer" class="video-container">
+            <video id="video" autoplay></video>
+            <button id="snapBtn" class="snap-btn">
+                <i class="fas fa-camera"></i> Take Photo
+            </button>
+            <canvas id="canvas" style="display:none;"></canvas>
+        </div>
+
+        <!-- Editor Layout -->
+        <div class="editor-layout">
+            <!-- Sidebar Controls -->
+            <aside class="sidebar">
+                <!-- Filter Effects -->
+                <div class="effect-group">
+                    <div class="effect-group-title">
+                        <i class="fas fa-palette"></i> Filter Effects
+                    </div>
+                    <div class="controls-grid">
+                        <button onclick="applyFilter('original')" class="control-btn active" id="btn-original">
+                            <i class="fas fa-undo"></i> Original
+                        </button>
+                        <button onclick="applyFilter('grayscale')" class="control-btn" id="btn-grayscale">
+                            <i class="fas fa-adjust"></i> Grayscale
+                        </button>
+                        <button onclick="applyFilter('sepia')" class="control-btn" id="btn-sepia">
+                            <i class="fas fa-sun"></i> Sepia
+                        </button>
+                        <button onclick="applyFilter('invert')" class="control-btn" id="btn-invert">
+                            <i class="fas fa-exchange-alt"></i> Invert
+                        </button>
+                        <button onclick="applyFilter('blur')" class="control-btn" id="btn-blur">
+                            <i class="fas fa-snowflake"></i> Blur
+                        </button>
+                        <button onclick="applyFilter('contrast')" class="control-btn" id="btn-contrast">
+                            <i class="fas fa-sliders-h"></i> Contrast
+                        </button>
+                        <button onclick="applyFilter('brightness')" class="control-btn" id="btn-brightness">
+                            <i class="fas fa-sun"></i> Brighten
+                        </button>
+                        <button onclick="applyFilter('darken')" class="control-btn" id="btn-darken">
+                            <i class="fas fa-moon"></i> Darken
+                        </button>
+                        <button onclick="applyFilter('saturate')" class="control-btn" id="btn-saturate">
+                            <i class="fas fa-palette"></i> Saturate
+                        </button>
+                        <button onclick="applyFilter('hue-rotate')" class="control-btn" id="btn-hue">
+                            <i class="fas fa-sync"></i> Hue Shift
+                        </button>
+                        <button onclick="applyFilter('vintage')" class="control-btn" id="btn-vintage">
+                            <i class="fas fa-film"></i> Vintage
+                        </button>
+                        <button onclick="applyFilter('cold')" class="control-btn" id="btn-cold">
+                            <i class="fas fa-snowflake"></i> Cold
+                        </button>
+                        <button onclick="applyFilter('warm')" class="control-btn" id="btn-warm">
+                            <i class="fas fa-fire"></i> Warm
+                        </button>
+                        <button onclick="applyFilter('dramatic')" class="control-btn" id="btn-dramatic">
+                            <i class="fas fa-theater-masks"></i> Dramatic
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Intensity Control -->
+                <div class="effect-group">
+                    <div class="effect-group-title">
+                        <i class="fas fa-sliders-h"></i> Intensity
+                    </div>
+                    <div class="slider-control">
+                        <div class="slider-label">
+                            <span>Effect Strength</span>
+                            <span id="intensityValue" class="slider-value">100%</span>
+                        </div>
+                        <input type="range" id="intensitySlider" min="0" max="100" value="100">
+                    </div>
+                </div>
+
+                <!-- Transformations -->
+                <div class="effect-group">
+                    <div class="effect-group-title">
+                        <i class="fas fa-sync-alt"></i> Transform
+                    </div>
+                    <div class="controls-grid">
+                        <button onclick="rotateImage(90)" class="control-btn" id="btn-rotate">
+                            <i class="fas fa-redo"></i> Rotate 90°
+                        </button>
+                        <button onclick="flipImage('horizontal')" class="control-btn" id="btn-flip-h">
+                            <i class="fas fa-arrows-alt-h"></i> Flip H
+                        </button>
+                        <button onclick="flipImage('vertical')" class="control-btn" id="btn-flip-v">
+                            <i class="fas fa-arrows-alt-v"></i> Flip V
+                        </button>
+                        <button onclick="cropImage()" class="control-btn" id="btn-crop">
+                            <i class="fas fa-crop-alt"></i> Crop
+                        </button>
+                    </div>
+
+                    <div class="slider-control" style="margin-top: 0.75rem;">
+                        <div class="slider-label">
+                            <span>Zoom</span>
+                            <span id="zoomValue" class="slider-value">100%</span>
+                        </div>
+                        <input type="range" id="zoomSlider" min="50" max="200" value="100">
+                    </div>
+                </div>
+
+                <!-- Special Effects -->
+                <div class="effect-group">
+                    <div class="effect-group-title">
+                        <i class="fas fa-magic"></i> Special Effects
+                    </div>
+                    <div class="controls-grid">
+                        <button onclick="applyFilter('duotone')" class="control-btn" id="btn-duotone">
+                            <i class="fas fa-adjust"></i> Duotone
+                        </button>
+                        <button onclick="applyFilter('vignette')" class="control-btn" id="btn-vignette">
+                            <i class="fas fa-circle"></i> Vignette
+                        </button>
+                        <button onclick="applyFilter('noise')" class="control-btn" id="btn-noise">
+                            <i class="fas fa-mountain"></i> Noise
+                        </button>
+                        <button onclick="applyFilter('sharpen')" class="control-btn" id="btn-sharpen">
+                            <i class="fas fa-bolt"></i> Sharpen
+                        </button>
+                        <button onclick="applyFilter('cinema')" class="control-btn" id="btn-cinema">
+                            <i class="fas fa-film"></i> Cinema
+                        </button>
+                        <button onclick="applyFilter('glitch')" class="control-btn" id="btn-glitch">
+                            <i class="fas fa-bug"></i> Glitch
+                        </button>
+                        <button onclick="applyPixelateEffect()" class="control-btn" id="btn-pixelate">
+                            <i class="fas fa-th"></i> Pixelate
+                        </button>
+                        <button onclick="applyFilter('night')" class="control-btn" id="btn-night">
+                            <i class="fas fa-moon"></i> Night
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Canvas Container -->
+            <div class="image-container">
+                <div class="canvas-wrapper">
+                    <div id="emptyState" class="empty-state">
+                        <i class="fas fa-image"></i>
+                        <h3>No Image Selected</h3>
+                        <p>Upload an image or capture a photo to start editing</p>
+                    </div>
+                    <canvas id="editCanvas"></canvas>
+                </div>
+
+                <!-- Actions Bar -->
+                <div class="actions-bar">
+                    <button onclick="resetImage()" class="action-btn reset-btn">
+                        <i class="fas fa-undo-alt"></i> Reset
+                    </button>
+                    <button onclick="downloadImage()" class="action-btn download-btn">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Image downloaded successfully!</span>
+    </div>
+
+
+
+
+
+    <footer class="app-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-pencil-alt"></i>
+                <span>Sikandar's Editor</span>
+            </div>
+            <p class="footer-tagline">Advanced Image Editing Made Simple</p>
+            <div class="social-links">
+                <a href="https://github.com/mdnazishpatel" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/nazish-patel" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://x.com/NazishPatel7" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter) Profile">
+                    <i class="fab fa-x-twitter"></i>
+                </a>
+            </div>
+            <p class="copyright">© <span id="currentYear">2025</span> Sikandar's Editor. All rights reserved.</p>
+        </div>
+    </footer>
+    
+   
+       
+
+
+
+    <script src="script.js">
+
+document.getElementById('currentYear').textContent = new Date().getFullYear();
+</script>
+
+    </script>
+</body>
+</html>
