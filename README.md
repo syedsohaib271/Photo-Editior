@@ -15,7 +15,7 @@ A powerful, web-based photo editing application built with HTML, CSS, and advanc
 
 ## 🚀 Demo
 
-[Live Demo](https://your-username.github.io/sohaib-photo-editor) *(Replace with your actual demo link)*
+[Live Demo](https://photoseditor.netlify.app/)
 
 ## 📸 Screenshots
 
